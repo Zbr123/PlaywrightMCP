@@ -48,8 +48,3 @@ jobs:
       with:
         name: playwright-test-artifacts
         path: cucumber-report.html
-   
-    # Generate and serve HTML report
-    - name: Generate Playwright Report
-      if: ${{ always() }}
-      run: npx playwright show-report playwright-report
