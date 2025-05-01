@@ -47,7 +47,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: playwright-test-artifacts
-        path: playwright-report/
+        path: cucumber-report.html
    
     # Generate and serve HTML report
     - name: Generate Playwright Report
