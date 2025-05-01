@@ -5,46 +5,90 @@ on:
   pull_request:
     branches: [ main ]
 jobs:
-  CheckoutCode:
+  Checkout:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
-    # Checkout the repository code
-    - uses: actions/checkout@v4
-    # Set up Node.js environment
-    - uses: actions/setup-node@v3
-      with:
-        node-version: '18'
-    # Install dependencies
-    - name: Install Dependencies
-      run: npm ci
-    # Install Playwright browsers and dependencies
-    - name: Install Playwright
-      run: npx playwright install --with-deps
-    # Install Playwright MCP server
-    - name: Install Playwright MCP Server
-      run: npm install @playwright/mcp@latest
-    
-    # Start Playwright MCP server in the background
-    - name: Start Playwright MCP Server
-      run: npm run mcp:headless
-      # env:
-      #   PLAYWRIGHT_WS_ENDPOINT: ws://localhost:8931/
-    
-    # # Wait for MCP server to be ready (optional, to ensure server is up)
-    # - name: Wait for MCP Server
-    #   run: sleep 10
-    
-    # # Run Playwright tests
-    # - name: Run Playwright Tests
-    #   run: npx playwright test
-    #   env:
-    #     PLAYWRIGHT_TEST_BASE_URL: http://localhost:3000
-    
-    # Upload test artifacts (e.g., screenshots, logs) if tests fail
-    - name: Upload Test Artifacts
-      if: ${{ always() }}
-      uses: actions/upload-artifact@v4
-      with:
-        name: playwright-test-artifacts
-        path: cucumber-report.html
+      - name: Checkout the repository code
+        uses: actions/checkout@v4
+  InstallDependency:
+    needs: Checkout
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repository code
+        uses: actions/checkout@v4
+      - name: Set up Node.js environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Install Dependencies
+        run: npm ci
+  PlaywrightInstallation:
+    needs: InstallDependency
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repository code
+        uses: actions/checkout@v4
+      - name: Set up Node.js environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Install Dependencies
+        run: npm ci
+      - name: Install Playwright
+        run: npx playwright install --with-deps
+  MCPServerInstallation:
+    needs: PlaywrightInstallation
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repository code
+        uses: actions/checkout@v4
+      - name: Set up Node.js environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Install Dependencies
+        run: npm ci
+      - name: Install Playwright MCP Server
+        run: npm install @playwright/mcp@latest
+  TestExecution:
+    needs: MCPServerInstallation
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repository code
+        uses: actions/checkout@v4
+      - name: Set up Node.js environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Install Dependencies
+        run: npm ci
+      - name: Install Playwright
+        run: npx playwright install --with-deps
+      - name: Install Playwright MCP Server
+        run: npm install @playwright/mcp@latest
+      - name: Start Playwright MCP Server
+        run: npm run mcp:headless &
+      - name: Wait for MCP Server
+        run: sleep 10
+      - name: Run Playwright Tests
+        run: npx playwright test
+        env:
+          PLAYWRIGHT_TEST_BASE_URL: http://localhost:3000
+  UploadTestArtifacts:
+    needs: TestExecution
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    if: ${{ always() }}
+    steps:
+      - name: Checkout the окна repository code
+        uses: actions/checkout@v4
+      - name: Upload Test Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-test-artifacts
+          path: cucumber-report.html
