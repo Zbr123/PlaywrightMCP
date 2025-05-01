@@ -27,7 +27,7 @@ jobs:
     
     # Start Playwright MCP server in the background
     - name: Start Playwright MCP Server
-      run: npm run mcp:headed
+      run: npm run mcp:headless
       # env:
       #   PLAYWRIGHT_WS_ENDPOINT: ws://localhost:8931/
     
