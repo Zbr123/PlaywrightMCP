@@ -70,7 +70,7 @@ jobs:
       - name: Install Playwright MCP Server
         run: npm install @playwright/mcp@latest
 
-  RunTestsAndUpload:
+  RunTestAndUpload:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     needs: InstallMCPServer
