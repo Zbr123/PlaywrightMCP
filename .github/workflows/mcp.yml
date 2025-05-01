@@ -19,7 +19,7 @@ jobs:
     - name: Install Dependencies
       run: npm ci
 
-  InstallPlaywright&MCPServer:
+  InstallPlaywrightAndMCPServer:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     needs: CheckoutCode  # This job depends on CheckoutCode job
