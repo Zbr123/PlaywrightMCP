@@ -37,7 +37,7 @@ jobs:
   UploadTestArtifacts:
     timeout-minutes: 60
     runs-on: ubuntu-latest
-    needs: StartMCPServer  # This job depends on StartMCPServer job
+    needs: InstallPlaywrightAndMCPServer  # This job depends on InstallPlaywrightAndMCPServer job
     steps:
     # Upload test artifacts (e.g., screenshots, logs) if tests fail
     - name: Upload Test Artifacts
